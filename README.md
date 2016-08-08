@@ -1,5 +1,3 @@
 <p align="center">
-  <a href="http://necrobot.io">
-    <img alt="Logo" src="http://necrobot.io/img/typotype-transparent.png" width="600">
-  </a>
+    <img alt="Logo" src="https://github.com/FireDeveloper/FireFlow/blob/master/logo.png" width="600">
 </p>
