@@ -6,6 +6,14 @@
 //char 6x8
 //480 x 320
 
+void TFT_Print_Reflow_Screen() {
+  tft.fillScreen(BLACK);
+  TFT_Print_Grid();
+  TFT_Print_Reflow_Btns();
+  TFT_Print_Stats();
+  //  TFT_Print_Graph();
+}
+
 void TFT_Print_Reflow_Btns() {
   //Boarder
   tft.fillRoundRect(480 - 4 - 120, 4, 120, 40, 10, GREEN);

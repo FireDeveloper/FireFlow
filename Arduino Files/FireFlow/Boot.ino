@@ -5,11 +5,12 @@ void BootImage() {
   BootCheck_SD(); //Check SD card
   PrintLoading(); //Print Loading screen
   BootCheckFiles();
-  BootCheckMax(); //Work on it
+  BootCheckSensor();
+  BootCheckFinal(); //Work on it
 
 
-  PrintMainScreen();
-  while (true) {}
+  //  PrintMainScreen();
+  //  while (true) {}
 
 }
 
@@ -29,6 +30,7 @@ void PrintLoading() {
   tft.setTextColor(WHITE);
   tft.setCursor(480  - 7  * 6 * 2 - 1,  320 - 8 * 2); //(45, 140)
   tft.println(F("Ver 0.1"));
+  delay(100);
 
   if (!SD.exists(F("fireflow/res/Boot_Img.bmp")))
     PrintMissingFiles();
@@ -45,19 +47,37 @@ void BootCheckFiles() {
 
   while (Files.available()) {
     String s = Files.readStringUntil('\n');
-    char charFileName[s.length() ];
+    char charFileName[s.length()];
     s.toCharArray(charFileName, sizeof(charFileName));
 
     if (!SD.exists(charFileName)) {
       Serial.println(charFileName);
       PrintMissingFiles();
     }
-
   }
+  Files.close();
 }
 
-void BootCheckMax() {
+void BootCheckSensor() {
 
+}
+
+void BootCheckFinal() {
+  File Files;
+  Files = SD.open(FILE_CONFIG);
+  if (Files.read() == FILE_TRUE) { //First Boot
+    Files.close();
+    TouchScreenCalibrate();
+    Files =  SD.open(FILE_CONFIG, FILE_WRITE);
+
+    Files.seek(0);
+    Files.print("1");
+    Files.close();
+    SaveTFTCalibration();
+  } else {
+    LoadTFTCalibration();
+    PrintMainScreen();
+  }
 }
 
 void PrintMissingFiles() {
@@ -69,15 +89,9 @@ void PrintMissingFiles() {
 }
 
 
-void PrintMainScreen() {
-  tft.fillScreen(BLACK);
-  bmpDraw(F("fireflow/res/Oven.bmp"), 60, 100);
-  bmpDraw(F("fireflow/res/Graph.bmp"), 180, 20);
-  bmpDraw(F("fireflow/res/Settings.bmp"), 300, 100);
-  bmpDraw(F("fireflow/res/info.bmp"), 180, 180);
-}
 
-void TouchBootListener(uint16_t x, uint16_t y) {
+
+void TouchBootListener() {
 
 }
 

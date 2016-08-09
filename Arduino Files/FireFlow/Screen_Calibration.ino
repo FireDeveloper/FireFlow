@@ -1,10 +1,5 @@
 uint32_t rx[8], ry[8]; //Reed Points
 
-//void showpoint(void) {
-//  Serial.print("\r\nx="); Serial.print(tp.x);
-//  Serial.print(" y="); Serial.print(tp.y);
-//}
-
 bool ISPRESSED(void) {
   // .kbv this was too sensitive !! now touch has to be stable for 50ms
   int count = 0;
@@ -80,16 +75,8 @@ void calibrate(int x, int y, int i) {
   drawCrossHair(x, y, 0x528A );
   rx[i] = tp.x;
   ry[i] = tp.y;
-  //Print Coordinates
-  tft.setCursor(192, 152);
-  tft.print(F("   "));
-  tft.setCursor(192, 152);
-  tft.print(tp.x);
 
-  tft.setCursor(252, 152);
-  tft.print(F("   "));
-  tft.setCursor(252, 152);
-  tft.print(tp.y);
+  PrintCoordinates();
   while (ISPRESSED() == true) {}
 }
 
@@ -134,9 +121,10 @@ void readCoordinates() {
   tp.y = ty / iter;
 }
 
-
 void TouchScreenCalibrate() {
   startup();
+  ScreenPrinting = PrintMainScreen;
+  TouchListener = TouchScreenCalibrationListener;
 
   drawCrossHair(480 - 10, 10, 0x528A);
   drawCrossHair(480 / 2, 10, 0x528A);
@@ -155,7 +143,6 @@ void TouchScreenCalibrate() {
   tft.drawRect(179,  177,  122,  34, BLACK);
   tft.drawRect(178,  177,  124,  35, BLACK);
 
-
   //Left
   calibrate(10, 10, 0);
   calibrate(10, 320 / 2, 1);
@@ -173,45 +160,29 @@ void TouchScreenCalibrate() {
   int swapxy = ry[2] - ry[0];
   swapxy = (swapxy < -500 || swapxy > 500);
 
-  int32_t clx, crx, cty, cby;
-
   if (swapxy != 0) { //normal
     //  Serial.println("XY Normal");
-    clx = (rx[0] + rx[1] + rx[2]) / 3;
-    crx = (rx[5] + rx[6] + rx[7]) / 3;
-    cty = (ry[0] + ry[3] + ry[5]) / 3;
-    cby = (ry[2] + ry[4] + ry[7]) / 3;
+    Cal_Left_X = (rx[0] + rx[1] + rx[2]) / 3;
+    Cal_Right_X = (rx[5] + rx[6] + rx[7]) / 3;
+    Cal_Top_Y = (ry[0] + ry[3] + ry[5]) / 3;
+    Cal_Bot_Y = (ry[2] + ry[4] + ry[7]) / 3;
   } else { //inverted
     // Serial.println("XY Inverted");
-    clx = (ry[0] + ry[1] + ry[2]) / 3;
-    crx = (ry[5] + ry[6] + ry[7]) / 3;
-    cty = (rx[0] + rx[3] + rx[5]) / 3;
-    cby = (rx[2] + rx[4] + rx[7]) / 3;
+    Cal_Left_X = (ry[0] + ry[1] + ry[2]) / 3;
+    Cal_Right_X = (ry[5] + ry[6] + ry[7]) / 3;
+    Cal_Top_Y = (rx[0] + rx[3] + rx[5]) / 3;
+    Cal_Bot_Y = (rx[2] + rx[4] + rx[7]) / 3;
   }
 
   // Cross offset fix
-  float  px = float(crx - clx) / (480 - 20);
-  float  py = float(cby - cty) / (320 - 20);
-  clx -= px * 10;
-  crx += px * 10;
-  cty -= py * 10;
-  cby += py * 10;
-
+  float  px = float(Cal_Right_X - Cal_Left_X) / (480 - 20);
+  float  py = float(Cal_Bot_Y - Cal_Top_Y) / (320 - 20);
+  Cal_Left_X -= px * 10;
+  Cal_Right_X += px * 10;
+  Cal_Top_Y -= py * 10;
+  Cal_Bot_Y += py * 10;
 
   done();
-
-  while (true)
-    if (ISPRESSED()) {
-      int x = map(tp.x, clx, crx, 0, 480);
-      int y = map(tp.y, cty, cby, 0, 320);
-      Serial.print(x);
-      Serial.print("  ");
-      Serial.println(y);
-      while (ISPRESSED() == true) {}
-    }
-
-
-
 }
 
 
@@ -221,15 +192,55 @@ void fail() {
 
 void done() {
   tft.setCursor(216, 186);
-  tft.print(F("Exit")); Exit
-  while (true) {}
+  tft.print(F("Exit"));// Exit
+  TouchListener == TouchScreenCalibrationListener; //Set Touch display listener
 }
 
-void invertouch() {
+void TouchScreenCalibrationListener() {
+  if (tp.x >= 180 && tp.x <= 299  && tp.y >= 178 && tp.y <= 209) { //Exit pressed
+    ScreenPrinting();
+    return;
+  }
+  PrintCoordinates();
+}
+
+
+void PrintCoordinates() {
+  //Clean old reading
+  tft.setCursor(192, 152);
+  tft.print(F("   "));
+  tft.setCursor(252, 152);
+  tft.print(F("   "));
+
+  if (tp.x > 99 || tp.x < -9) {
+    tft.setCursor(192, 152);
+    tft.print(tp.x);
+  } else if (tp.x > 9 || tp.x < 0) {
+    tft.setCursor(198, 152);
+    tft.print(tp.x);
+  } else {
+    tft.setCursor(204, 152);
+    tft.print(tp.x);
+  }
+
+  if (tp.y > 99 || tp.y < -9) {
+    tft.setCursor(252, 152);
+    tft.print(tp.y);
+  } else if (tp.y > 9 || tp.y < 0) {
+    tft.setCursor(258, 152);
+    tft.print(tp.y);
+  } else {
+    tft.setCursor(264, 152);
+    tft.print(tp.y);
+  }
+}
+
+
+/*
+  void invertouch() {
   for (byte i = 0; i < 8; i++) {
     int temp = rx[i];
     rx[i] = ry[i];
     ry[i] = temp;
   }
-}
-
+  }*/

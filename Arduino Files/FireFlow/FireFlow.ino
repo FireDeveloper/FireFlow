@@ -1,10 +1,5 @@
-#define LCD_CS A3 // Chip Select goes to Analog 3
-#define LCD_CD A2 // Command/Data goes to Analog 2
-#define LCD_WR A1 // LCD Write goes to Analog 1
-#define LCD_RD A0 // LCD Read goes to Analog 0
-#define LCD_RESET A4 // Can alternately just connect to Arduino's reset pin
-
 #include "Adafruit_GFX.h"// Hardware-specific library
+#include "FireFlow.h"
 #include <MCUFRIEND_kbv.h>
 #include <TouchScreen.h>         //Adafruit Library
 
@@ -14,7 +9,6 @@
 Sd2Card card;
 SdVolume volume;
 SdFile root;
-
 
 MCUFRIEND_kbv tft;
 
@@ -31,10 +25,10 @@ MCUFRIEND_kbv tft;
 #define DARK_GRAY   0x4208
 #define LIGHT_GRAY   0xBDF7
 
-
 uint16_t g_identifier;
 
-void (*TouchListener)(uint16_t x, uint16_t y); //TouchScreen Listener
+void (*TouchListener)(); //TouchScreen Listener
+void (*ScreenPrinting)(); //TouchScreen Listener
 
 #define YP A1   //[A1], A3 for ILI9320, A2 for ST7789V 
 #define YM 7    //[ 7], 9             , 7
@@ -42,6 +36,9 @@ void (*TouchListener)(uint16_t x, uint16_t y); //TouchScreen Listener
 #define XP 6    //[ 6], 8             , 6
 TouchScreen myTouch(XP, YP, XM, YM, 300);
 TSPoint tp;
+
+int32_t Cal_Left_X, Cal_Right_X, Cal_Top_Y, Cal_Bot_Y;
+
 
 struct SeekBar {
   uint16_t x;
@@ -55,10 +52,7 @@ struct SeekBar {
 };
 SeekBar skBar1 = {0, 0, 480, 100, 13, 100, 0, 50};
 
-struct Calibration {
-  uint16_t Left, Right, Top, Bottom;
-  bool FirstTime, AutoStart;
-};
+
 
 void setup(void) {
   Serial.begin(9600);
@@ -75,16 +69,30 @@ void setup(void) {
   tft.fillScreen(BLACK);
 
   TouchListener = TouchBootListener;
+
+  BootImage(); //Start Boot Proccess
 }
 
 uint16_t GraphData[400] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 void loop() {
-  TouchScreenCalibrate();
-  while (true) {}
-  BootImage(); //Boot Processing
+  if (ISPRESSED()) {
+    tp.x = map(tp.x, Cal_Left_X, Cal_Right_X, 0, 480);
+    tp.y = map(tp.y, Cal_Top_Y, Cal_Bot_Y, 0, 320);
+    TouchListener();
+  }
 
-  PrintKbrd();
+}
+
+//  TouchScreenCalibrate();
+//  while (true) {}
+//Boot Processing
+
+//  OpenFiles(F("ss"));
+
+
+/*
+  //  PrintKbrd();
   while (true) {
   }
   PrintBmp();
@@ -96,7 +104,15 @@ void loop() {
   SeekBar_SetProgress(skBar1, 75,  CYAN,  CYAN);
 
   TestSeekBar();
-}
+
+  }
+*/
+
+
+
+
+
+
 /*
   DebugTemp();
   // put your main code here, to run repeatedly:
