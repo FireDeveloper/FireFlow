@@ -7,11 +7,6 @@ void BootImage() {
   BootCheckFiles();
   BootCheckSensor();
   BootCheckFinal(); //Work on it
-
-
-  //  PrintMainScreen();
-  //  while (true) {}
-
 }
 
 void BootCheck_SD() {
@@ -73,9 +68,9 @@ void BootCheckFinal() {
     Files.seek(0);
     Files.print("1");
     Files.close();
-    SaveTFTCalibration();
+    Save_TFT_Calibration();
   } else {
-    LoadTFTCalibration();
+    Load_TFT_Calibration();
     PrintMainScreen();
   }
 }
@@ -88,10 +83,6 @@ void PrintMissingFiles() {
   while (true) {}
 }
 
-
-
-
 void TouchBootListener() {
 
 }
-

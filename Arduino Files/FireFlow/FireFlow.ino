@@ -12,33 +12,13 @@ SdFile root;
 
 MCUFRIEND_kbv tft;
 
-#define BLACK   0x0000
-#define BLUE    0x001F
-#define RED     0xF800
-#define GREEN   0x07E0
-#define CYAN    0x07FF
-#define MAGENTA 0xF81F
-#define YELLOW  0xFFE0
-#define WHITE   0xFFFF
-
-#define GRAY   0x8410
-#define DARK_GRAY   0x4208
-#define LIGHT_GRAY   0xBDF7
-
-uint16_t g_identifier;
-
 void (*TouchListener)(); //TouchScreen Listener
-void (*ScreenPrinting)(); //TouchScreen Listener
+void (*ScreenPrinting)(); //Screen Printing Helper
 
-#define YP A1   //[A1], A3 for ILI9320, A2 for ST7789V 
-#define YM 7    //[ 7], 9             , 7
-#define XM A2   //[A2], A2 for ILI9320, A1 for ST7789V
-#define XP 6    //[ 6], 8             , 6
 TouchScreen myTouch(XP, YP, XM, YM, 300);
 TSPoint tp;
 
 int32_t Cal_Left_X, Cal_Right_X, Cal_Top_Y, Cal_Bot_Y;
-
 
 struct SeekBar {
   uint16_t x;
@@ -53,11 +33,10 @@ struct SeekBar {
 SeekBar skBar1 = {0, 0, 480, 100, 13, 100, 0, 50};
 
 
-
 void setup(void) {
   Serial.begin(9600);
-  uint32_t when = millis();
-  g_identifier = tft.readID();
+  //  uint32_t when = millis(); //???????????
+  uint16_t  g_identifier = tft.readID();
   Serial.print("ID = 0x");
   Serial.println(g_identifier, HEX);
   if (g_identifier == 0x00D3 || g_identifier == 0xD3D3) g_identifier = 0x9481; // write-only shield
@@ -81,15 +60,20 @@ void loop() {
     tp.y = map(tp.y, Cal_Top_Y, Cal_Bot_Y, 0, 320);
     TouchListener();
   }
-
 }
 
-//  TouchScreenCalibrate();
-//  while (true) {}
-//Boot Processing
 
-//  OpenFiles(F("ss"));
+void TFT_Draw_Back_Button() {
+  //y = 0-30
+  tft.fillTriangle(15, 0,  15,  30,  0,  15,  WHITE);
+  tft.fillRect( 15,  7,  40,  17,  WHITE);
+}
 
+bool TFT_Back_Button_Pressed() {
+  if (tp.x < 55 && tp.y < 30)
+    return true;
+  return false;
+}
 
 /*
   //  PrintKbrd();

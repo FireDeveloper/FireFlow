@@ -1,4 +1,4 @@
-void SaveTFTCalibration() {
+void Save_TFT_Calibration() {
   File Files;
   Files = SD.open(F("fireflow/set/TFTcal.txt"), FILE_WRITE);
   Files.seek(0);
@@ -9,7 +9,7 @@ void SaveTFTCalibration() {
   Files.close();
 }
 
-void LoadTFTCalibration() {
+void Load_TFT_Calibration() {
   String s;
   File Files;
   Files = SD.open(F("fireflow/set/TFTcal.txt"));
@@ -25,4 +25,3 @@ void LoadTFTCalibration() {
 
   Files.close();
 }
-

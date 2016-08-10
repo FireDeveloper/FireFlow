@@ -1,7 +1,6 @@
 uint32_t rx[8], ry[8]; //Reed Points
 
-bool ISPRESSED(void) {
-  // .kbv this was too sensitive !! now touch has to be stable for 50ms
+bool ISPRESSED(void) { // .kbv this was too sensitive !! now touch has to be stable for 50ms
   int count = 0;
   bool state, oldstate;
   while (count < 10) { //10 * 5ms delay - 5ms last dummy delay = 45ms stable 50ms responce
@@ -90,10 +89,10 @@ void readCoordinates() {
 
   while (OK == false) {
     tft.setCursor(198, 118);
-    tft.print(" PRESS ");
+    tft.print(F(" PRESS "));
     while (ISPRESSED() == false) {}
     tft.setCursor(198, 118);
-    tft.print(" HOLD! ");
+    tft.print(F(" HOLD! "));
     cnt = 0;
     iter = 400;
     do {

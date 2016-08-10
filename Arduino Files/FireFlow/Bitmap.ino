@@ -1,7 +1,6 @@
 #define BUFFPIXEL 20
 
-void bmpDraw(const __FlashStringHelper *filename, int x, int y)
-{
+void bmpDraw(const __FlashStringHelper *filename, int x, int y) {
   File     bmpFile;
   int      bmpWidth, bmpHeight;   // W+H in pixels
   uint8_t  bmpDepth;              // Bit depth (currently must be 24)
@@ -21,13 +20,11 @@ void bmpDraw(const __FlashStringHelper *filename, int x, int y)
   if ((x >= tft.width()) || (y >= tft.height())) return;
 
   // Open requested file on SD card
-  if ((bmpFile = SD.open(filename)) == NULL) {
+  if ((bmpFile = SD.open(filename)) == NULL)
     return;
-  }
 
   // Parse BMP header
-  if (read16(bmpFile) == 0x4D42)
-  {
+  if (read16(bmpFile) == 0x4D42) {
     // BMP signature
     read32(bmpFile);
     (void)read32(bmpFile); // Read & ignore creator bytes
@@ -35,12 +32,12 @@ void bmpDraw(const __FlashStringHelper *filename, int x, int y)
     read32(bmpFile);
     bmpWidth  = read32(bmpFile);
     bmpHeight = read32(bmpFile);
-    if (read16(bmpFile) == 1)
-    { // # planes -- must be '1'
+    if (read16(bmpFile) == 1) {
+      // # planes -- must be '1'
       bmpDepth = read16(bmpFile); // bits per pixel
 
-      if ((bmpDepth == 24) && (read32(bmpFile) == 0))
-      { // 0 = uncompressed
+      if ((bmpDepth == 24) && (read32(bmpFile) == 0)) {
+        // 0 = uncompressed
         goodBmp = true; // Supported BMP format -- proceed!
 
         // BMP rows are padded (if needed) to 4-byte boundary
@@ -48,8 +45,7 @@ void bmpDraw(const __FlashStringHelper *filename, int x, int y)
 
         // If bmpHeight is negative, image is in top-down order.
         // This is not canon but has been observed in the wild.
-        if (bmpHeight < 0)
-        {
+        if (bmpHeight < 0) {
           bmpHeight = -bmpHeight;
           flip      = false;
         }
@@ -63,8 +59,8 @@ void bmpDraw(const __FlashStringHelper *filename, int x, int y)
         // Set TFT address window to clipped image bounds
         tft.setAddrWindow(x, y, x + w - 1, y + h - 1);
 
-        for (row = 0; row < h; row++)
-        { // For each scanline...
+        for (row = 0; row < h; row++) {
+          // For each scanline...
           // Seek to start of scan line.  It might seem labor-
           // intensive to be doing this on every line, but this
           // method covers a lot of gritty details like cropping
@@ -75,14 +71,13 @@ void bmpDraw(const __FlashStringHelper *filename, int x, int y)
             pos = bmpImageoffset + (bmpHeight - 1 - row) * rowSize;
           else     // Bitmap is stored top-to-bottom
             pos = bmpImageoffset + row * rowSize;
-          if (bmpFile.position() != pos)
-          { // Need seek?
+          if (bmpFile.position() != pos) { // Need seek?
             bmpFile.seek(pos);
             buffidx = sizeof(sdbuffer); // Force buffer reload
           }
 
-          for (col = 0; col < w; col++)
-          { // For each column...
+          for (col = 0; col < w; col++) {
+            // For each column...
             // Time to read more pixel data?
             if (buffidx >= sizeof(sdbuffer)) { // Indeed
               // Push LCD buffer to the display first
@@ -104,9 +99,7 @@ void bmpDraw(const __FlashStringHelper *filename, int x, int y)
         } // end scanline
         // Write any remaining data to LCD
         if (lcdidx > 0)
-        {
           tft.pushColors(lcdbuffer, lcdidx, first);
-        }
 
       } // end goodBmp
     }
@@ -115,16 +108,14 @@ void bmpDraw(const __FlashStringHelper *filename, int x, int y)
   if (!goodBmp) tft.println(F("BMP format not recognized."));
 }
 //=======================================================================
-uint16_t read16(File &f)
-{
+uint16_t read16(File &f) {
   uint16_t result;
   ((uint8_t *)&result)[0] = f.read(); // LSB
   ((uint8_t *)&result)[1] = f.read(); // MSB
   return result;
 }
 //=======================================================================
-uint32_t read32(File &f)
-{
+uint32_t read32(File &f) {
   uint32_t result;
   ((uint8_t *)&result)[0] = f.read(); // LSB
   ((uint8_t *)&result)[1] = f.read();

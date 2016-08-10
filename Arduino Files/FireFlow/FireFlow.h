@@ -5,6 +5,27 @@
 #define LCD_RESET A4 // Can alternately just connect to Arduino's reset pin
 
 
+#define YP A1   //[A1], A3 for ILI9320, A2 for ST7789V 
+#define YM 7    //[ 7], 9             , 7
+#define XM A2   //[A2], A2 for ILI9320, A1 for ST7789V
+#define XP 6    //[ 6], 8             , 6
+
+//Colors
+#define BLACK   0x0000
+#define BLUE    0x001F
+#define RED     0xF800
+#define GREEN   0x07E0
+#define CYAN    0x07FF
+#define MAGENTA 0xF81F
+#define YELLOW  0xFFE0
+#define WHITE   0xFFFF
+
+#define GRAY   0x8410
+#define DARK_GRAY   0x4208
+#define LIGHT_GRAY   0xBDF7
+
+
+
 //Files Types
 #define FILE_TRUE 0x30 //char '0'
 #define FILE_FALSE 0x31 //char '1'
