@@ -63,17 +63,7 @@ void loop() {
 }
 
 
-void TFT_Draw_Back_Button() {
-  //y = 0-30
-  tft.fillTriangle(15, 0,  15,  30,  0,  15,  WHITE);
-  tft.fillRect( 15,  7,  40,  17,  WHITE);
-}
 
-bool TFT_Back_Button_Pressed() {
-  if (tp.x < 55 && tp.y < 30)
-    return true;
-  return false;
-}
 
 /*
   //  PrintKbrd();

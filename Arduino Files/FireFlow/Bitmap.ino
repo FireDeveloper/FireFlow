@@ -1,5 +1,3 @@
-#define BUFFPIXEL 20
-
 void bmpDraw(const __FlashStringHelper *filename, int x, int y) {
   File     bmpFile;
   int      bmpWidth, bmpHeight;   // W+H in pixels

@@ -10,6 +10,8 @@
 #define XM A2   //[A2], A2 for ILI9320, A1 for ST7789V
 #define XP 6    //[ 6], 8             , 6
 
+#define BUFFPIXEL 20
+
 //Colors
 #define BLACK   0x0000
 #define BLUE    0x001F
@@ -23,6 +25,10 @@
 #define GRAY   0x8410
 #define DARK_GRAY   0x4208
 #define LIGHT_GRAY   0xBDF7
+
+#define HOLO_BLUE_LIGHT 0x35BC
+#define HOLO_BLUE_DARK 0x04D9
+#define HOLO_BLUE_BRIGHT 0x06FF
 
 
 
