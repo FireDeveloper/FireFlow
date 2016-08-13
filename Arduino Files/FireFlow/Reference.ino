@@ -2,7 +2,7 @@
 
    void drawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
    void drawFastVLine(uint16_t x0, uint16_t y0, uint16_t length, uint16_t color);
-   void drawFastHLine(uin86_t x0, uin86_t y0, uint8_t length, uint16_t color);
+   void drawFastHLine(uin16_t x0, uin16_t y0, uint16_t length, uint16_t color);
 
    void drawRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t color);
    void fillRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t color);

@@ -1,3 +1,4 @@
+#include <TimerThree.h>
 #include "Adafruit_GFX.h"// Hardware-specific library
 #include "FireFlow.h"
 #include <MCUFRIEND_kbv.h>
