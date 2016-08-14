@@ -1,13 +1,21 @@
 
 //Back Button
+bool Back_Button_Enable = true;
 void TFT_Draw_Back_Button() {
   //y = 0-30
   tft.fillTriangle(15, 0,  15,  30,  0,  15,  WHITE);
   tft.fillRect( 15,  7,  40,  17,  WHITE);
+  Back_Button_Enable = true;
+}
+
+void TFT_Erase_Back_Button() {
+  tft.fillTriangle(15, 0,  15,  30,  0,  15,  BLACK);
+  tft.fillRect( 15,  7,  40,  17,  BLACK);
+  Back_Button_Enable = false;
 }
 
 bool TFT_Back_Button_Pressed() {
-  if (tp.x < 55 && tp.y < 30)
+  if (tp.x < 55 && tp.y < 30 & Back_Button_Enable)
     return true;
   return false;
 }
@@ -56,4 +64,19 @@ void TFT_Draw_Small_Button_Temp(uint16_t x, uint16_t y) {
   tft.fillCircle(x, y + 13, 7, WHITE);
 }
 
+void TFT_Draw_Analog_Segment(uint16_t center_x, uint16_t center_y, int theta, uint16_t color) {
+  int end_x =  OVEN_TEMP_R * cos(theta * DEGREES_TO_RADIANS);
+  int end_y = OVEN_TEMP_R * sin(theta * DEGREES_TO_RADIANS);
+
+  //Romvos
+  int P_1_x = 25 * cos((theta - 10) * DEGREES_TO_RADIANS);
+  int P_1_y = 25 * sin((theta - 10) * DEGREES_TO_RADIANS);
+
+  int P_2_x = 25 * cos((theta + 10) * DEGREES_TO_RADIANS);
+  int P_2_y = 25 * sin((theta + 10) * DEGREES_TO_RADIANS);
+
+  tft.fillTriangle(center_x, center_y, center_x + end_x, center_y - end_y, center_x + P_1_x, center_y - P_1_y, color);
+
+  tft.fillTriangle(center_x, center_y, center_x + end_x, center_y - end_y, center_x + P_2_x, center_y - P_2_y, color);
+}
 

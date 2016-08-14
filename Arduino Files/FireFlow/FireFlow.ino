@@ -1,14 +1,13 @@
 //#include <TimerOne.h>
 
-#include <TimerThree.h>
-
-#include "Adafruit_GFX.h"// Hardware-specific library
-#include "FireFlow.h"
 #include <MCUFRIEND_kbv.h>
-#include <TouchScreen.h>         //Adafruit Library
-
+#include <TimerThree.h>
 #include <SPI.h>
 #include <SD.h>
+#include "Adafruit_GFX.h"// Hardware-specific library
+#include "FireFlow.h"
+
+#include <TouchScreen.h>         //Adafruit Library
 
 Sd2Card card;
 SdVolume volume;
@@ -40,13 +39,7 @@ SeekBar skBar1 = {0, 0, 480, 100, 13, 100, 0, 50};
 
 void setup(void) {
   Serial.begin(9600);
-  //  uint32_t when = millis(); //???????????
-  uint16_t  g_identifier = tft.readID();
-  Serial.print("ID = 0x");
-  Serial.println(g_identifier, HEX);
-  if (g_identifier == 0x00D3 || g_identifier == 0xD3D3) g_identifier = 0x9481; // write-only shield
-  if (g_identifier == 0xFFFF) g_identifier = 0x9341; // serial
-  tft.begin(g_identifier);
+  tft.begin(tft.readID());
   tft.setRotation(3);
 
   tft.invertDisplay(true);
@@ -61,15 +54,12 @@ void setup(void) {
 uint16_t GraphData[400] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 void loop() {
-  //  noInterrupts();
   if (ISPRESSED()) {
-    //    interrupts();
     tp.x = map(tp.x, Cal_Left_X, Cal_Right_X, 0, 480);
     tp.y = map(tp.y, Cal_Top_Y, Cal_Bot_Y, 0, 320);
     TouchListener();
   }
-  UpdateScreenHelper();
-  //  interrupts();
+  UpdateScreenHelper(); //Updates Screen which caused from interrupts
 }
 
 void NullFunction() {}

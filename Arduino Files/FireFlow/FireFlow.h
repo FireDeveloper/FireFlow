@@ -38,5 +38,18 @@
 //Common Files
 #define FILE_CONFIG F("fireflow/set/config.txt")
 
-//Variables
+
+//Clock Format
+#define SECS_PER_MIN  (60UL)
+#define SECS_PER_HOUR (3600UL)
+#define SECS_PER_DAY  (SECS_PER_HOUR * 24L)
+#define numberOfHours(_time_) (( _time_% SECS_PER_DAY) / SECS_PER_HOUR)
+#define numberOfSeconds(_time_) (_time_ % SECS_PER_MIN)
+#define numberOfMinutes(_time_) ((_time_ / SECS_PER_MIN) % SECS_PER_MIN)
+
+//Clock Round Functions
 #define DEGREES_TO_RADIANS 0.0174533
+
+
+
+
