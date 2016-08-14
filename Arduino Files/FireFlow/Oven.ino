@@ -1,6 +1,13 @@
 bool Set_Oven_On = false;
-uint32_t Oven_Seconds = 0;
+
 bool Oven_Time_On = true;
+uint16_t Oven_Set_Temp = 200;
+
+uint32_t Oven_Time_S_Left = 1000;
+
+int Oven_Time_H = 0,
+    Oven_Time_M = 0,
+    Oven_Time_S = 0;
 
 void TFT_Print_Oven_Screen() {
   TouchListener =  OvenTouchListener; //Change Touch Listener
@@ -18,10 +25,6 @@ void TFT_Print_Oven_Screen() {
   TFT_Draw_Small_Button_Clock(438, 74); //Time Settings
   TFT_Draw_Small_Button_Temp(40, 74);
 
-
-
-  //  tft.drawFastVLine( x0,  y0,  length,  WHITE);
-  //  tft.drawFastHLine( x0,  y0,  length,  WHITE);
 
   //Print Clock
   tft.setTextSize(1);
@@ -67,21 +70,25 @@ void TFT_Print_Oven_Screen() {
   tft.setCursor(157,  201);
   tft.print(F("300"));
 
+  tft.setTextSize(4);
+  tft.setCursor(4, 245);
+  tft.print(F("Set:"));
+  tft.setCursor(4, 283);
+  tft.print(F("Now:"));
 
-
-  for (int i = 0; i < 301; i++) {
-    TFT_Draw_Clock_Segment(119, 159, Calculate_Theta_Temp(i - 1), DARK_GRAY);
-    TFT_Draw_Clock_Segment(119, 159, Calculate_Theta_Temp(i), RED);
-    TFT_Oven_Draw_Temp(i);
-    delay(100);
-  }
+  TFT_Oven_Print_Lefting_Time();
+  /*
+    for (int i = 0; i < 301; i++) {
+      TFT_Draw_Clock_Segment(119, 159, Calculate_Theta_Temp(i - 1), DARK_GRAY);
+      TFT_Draw_Clock_Segment(119, 159, Calculate_Theta_Temp(i), RED);
+      TFT_Oven_Draw_Temp(i);
+      delay(100);
+    }*/
 }
 
 TSPoint Oven_Old_Temp_B_Point;
 
 #define OVEN_TEMP_R 50
-#define DEGREES_TO_RADIANS 0.0174533
-
 
 void TFT_Draw_Clock_Segment(int center_x, int center_y, int theta, uint16_t color) {
   int end_x =  OVEN_TEMP_R * cos(theta * DEGREES_TO_RADIANS);
@@ -131,13 +138,39 @@ int Calculate_Theta_Temp(int Temp) {
 }
 
 void Oven_Timer_Interrupt() {
-  Oven_Seconds -= 1;
-
-
+  Oven_Time_S_Left -= 1;
+  UpdateScreenHelper = TFT_Oven_Print_Lefting_Time;
 }
 
 void TFT_Oven_Print_Lefting_Time() {
+  int temp = Oven_Time_S_Left / 3600;
+  int temp2 = Oven_Time_S_Left;
 
+  tft.setTextSize(4);
+  tft.setTextColor(WHITE, BLACK);
+  tft.setCursor(264, 283);
+
+  if (temp < 10)
+    tft.print(F("0"));
+
+  tft.print(temp);
+  tft.print(F(":"));
+
+  temp2 -= temp * 3600;
+  temp = temp2 / 60;
+
+  if (temp < 10)
+    tft.print(F("0"));
+  tft.print(temp);
+  tft.print(F(":"));
+
+  temp2 -= temp * 60;
+
+  if (temp2 < 10)
+    tft.print(F("0"));
+  tft.print(temp2);
+
+  UpdateScreenHelper = NullFunction;
 }
 
 
@@ -149,12 +182,14 @@ void OvenTouchListener() {
     if (Set_Oven_On) {
       TFT_Draw_Holo_Switch_On(190, 40);
       if (Oven_Time_On) {
-        Timer3.initialize(100000000);
+        Timer3.initialize(1000000);
         Timer3.attachInterrupt(Oven_Timer_Interrupt);
         interrupts();
       }
-    } else
+    } else {
+      Timer3.stop();
       TFT_Draw_Holo_Switch_Off(190, 40);
+    }
   }
 
 }

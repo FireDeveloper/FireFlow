@@ -1,4 +1,7 @@
+//#include <TimerOne.h>
+
 #include <TimerThree.h>
+
 #include "Adafruit_GFX.h"// Hardware-specific library
 #include "FireFlow.h"
 #include <MCUFRIEND_kbv.h>
@@ -15,6 +18,7 @@ MCUFRIEND_kbv tft;
 
 void (*TouchListener)(); //TouchScreen Listener
 void (*ScreenPrinting)(); //Screen Printing Helper
+void (*UpdateScreenHelper)();
 
 TouchScreen myTouch(XP, YP, XM, YM, 300);
 TSPoint tp;
@@ -49,6 +53,7 @@ void setup(void) {
   tft.fillScreen(BLACK);
 
   TouchListener = TouchBootListener;
+  UpdateScreenHelper = NullFunction;
 
   BootImage(); //Start Boot Proccess
 }
@@ -56,14 +61,18 @@ void setup(void) {
 uint16_t GraphData[400] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 void loop() {
+  //  noInterrupts();
   if (ISPRESSED()) {
+    //    interrupts();
     tp.x = map(tp.x, Cal_Left_X, Cal_Right_X, 0, 480);
     tp.y = map(tp.y, Cal_Top_Y, Cal_Bot_Y, 0, 320);
     TouchListener();
   }
+  UpdateScreenHelper();
+  //  interrupts();
 }
 
-
+void NullFunction() {}
 
 
 /*

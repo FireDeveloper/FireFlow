@@ -4,7 +4,6 @@
 #define LCD_RD A0 // LCD Read goes to Analog 0
 #define LCD_RESET A4 // Can alternately just connect to Arduino's reset pin
 
-
 #define YP A1   //[A1], A3 for ILI9320, A2 for ST7789V 
 #define YM 7    //[ 7], 9             , 7
 #define XM A2   //[A2], A2 for ILI9320, A1 for ST7789V
@@ -38,3 +37,6 @@
 
 //Common Files
 #define FILE_CONFIG F("fireflow/set/config.txt")
+
+//Variables
+#define DEGREES_TO_RADIANS 0.0174533
