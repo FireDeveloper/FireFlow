@@ -64,19 +64,102 @@ void TFT_Draw_Small_Button_Temp(uint16_t x, uint16_t y) {
   tft.fillCircle(x, y + 13, 7, WHITE);
 }
 
-void TFT_Draw_Analog_Segment(uint16_t center_x, uint16_t center_y, int theta, uint16_t color) {
-  int end_x =  OVEN_TEMP_R * cos(theta * DEGREES_TO_RADIANS);
-  int end_y = OVEN_TEMP_R * sin(theta * DEGREES_TO_RADIANS);
+void TFT_Draw_Analog_Segment(uint16_t center_x, uint16_t center_y, int theta, uint8_t r, uint16_t color) {
+  int end_x = r * cos(theta * DEGREES_TO_RADIANS);
+  int end_y = r * sin(theta * DEGREES_TO_RADIANS);
 
   //Romvos
-  int P_1_x = 25 * cos((theta - 10) * DEGREES_TO_RADIANS);
-  int P_1_y = 25 * sin((theta - 10) * DEGREES_TO_RADIANS);
+  int P_1_x = r / 2 * cos((theta - 10) * DEGREES_TO_RADIANS);
+  int P_1_y = r / 2 * sin((theta - 10) * DEGREES_TO_RADIANS);
 
-  int P_2_x = 25 * cos((theta + 10) * DEGREES_TO_RADIANS);
-  int P_2_y = 25 * sin((theta + 10) * DEGREES_TO_RADIANS);
+  int P_2_x = r / 2 * cos((theta + 10) * DEGREES_TO_RADIANS);
+  int P_2_y = r / 2 * sin((theta + 10) * DEGREES_TO_RADIANS);
 
   tft.fillTriangle(center_x, center_y, center_x + end_x, center_y - end_y, center_x + P_1_x, center_y - P_1_y, color);
 
   tft.fillTriangle(center_x, center_y, center_x + end_x, center_y - end_y, center_x + P_2_x, center_y - P_2_y, color);
 }
+
+void ExportImageInterrupt() {
+  UpdateScreenHelper = ExportImage;
+}
+
+void ExportImage() {
+  Serial.println("Export Image");
+  char Name[] = "ss_00.bmp";
+
+  byte VH, VL;
+  int i, j = 0;
+
+  File outFile;
+  //Create the File
+  int counter = 0;
+  while (SD.exists(Name)) {
+    String s= Name;
+    Serial.println(s + " Exists");
+    counter++;
+    Name[3] = counter / 10 + '0';
+    Name[4] = counter % 10 + '0';
+  }
+
+  outFile = SD.open(Name, FILE_WRITE);
+  if (!outFile) {
+    Serial.println("err opng file");
+    return;
+  };
+  outFile.seek(0);
+
+  unsigned char bmFlHdr[14] = {'B', 'M', 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 0};
+  // 54 = std total "old" Windows BMP file header size = 14 + 40
+
+  unsigned char bmInHdr[40] = {40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 16, 0};
+  // 40 = info header size
+  //  1 = num of color planes
+  // 16 = bits per pixel
+  // all other header info = 0, including RI_RGB (no compr), DPI resolution
+
+  unsigned long fileSize = 2ul * SS_H * SS_W + 54; // pix data + 54 byte hdr
+
+  bmFlHdr[ 2] = (unsigned char)(fileSize      ); // all ints stored little-endian
+  bmFlHdr[ 3] = (unsigned char)(fileSize >>  8); // i.e., LSB first
+  bmFlHdr[ 4] = (unsigned char)(fileSize >> 16);
+  bmFlHdr[ 5] = (unsigned char)(fileSize >> 24);
+
+  bmInHdr[ 4] = (unsigned char)(    SS_W     );
+  bmInHdr[ 5] = (unsigned char)(    SS_W >>  8);
+  bmInHdr[ 6] = (unsigned char)(    SS_W >> 16);
+  bmInHdr[ 7] = (unsigned char)(    SS_W >> 24);
+  bmInHdr[ 8] = (unsigned char)(    SS_H      );
+  bmInHdr[ 9] = (unsigned char)(    SS_H >>  8);
+  bmInHdr[10] = (unsigned char)(    SS_H >> 16);
+  bmInHdr[11] = (unsigned char)(    SS_H >> 24);
+
+  outFile.write(bmFlHdr, sizeof(bmFlHdr));
+  outFile.write(bmInHdr, sizeof(bmInHdr));
+
+  for (i = SS_H; i > 0; i--) {
+    for (j = 0; j < SS_W; j++) {
+
+      uint16_t rgb = tft.readPixel(j, i - 1); // get pix color in rgb565 format //Fire fix '-1'
+
+      VH = (rgb & 0xFF00) >> 8; // High Byte
+      VL = rgb & 0x00FF;        // Low Byte
+
+      //RGB565 to RGB555 conversion... 555 is default for uncompressed BMP
+      //this conversion is from ...topic=177361.0 and has not been verified
+      VL = (VH << 7) | ((VL & 0xC0) >> 1) | (VL & 0x1f);
+      VH = VH >> 1;
+
+      //Write image data to file, low byte first
+      outFile.write(VL);
+      outFile.write(VH);
+    }
+  }
+  outFile.close();  //Close the file
+  Serial.println("done");
+  UpdateScreenHelper = NullFunction;
+}
+
+
+
 

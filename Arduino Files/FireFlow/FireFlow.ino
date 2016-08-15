@@ -1,6 +1,8 @@
+
 //#include <TimerOne.h>
 
 #include <MCUFRIEND_kbv.h>
+#include <max6675.h>
 #include <TimerThree.h>
 #include <SPI.h>
 #include <SD.h>
@@ -13,6 +15,8 @@ Sd2Card card;
 SdVolume volume;
 SdFile root;
 
+MAX6675 thermocouple(THERMOCOUPLE_CLK, THERMOCOUPLE_CS, THERMOCOUPLE_DO);
+
 MCUFRIEND_kbv tft;
 
 void (*TouchListener)(); //TouchScreen Listener
@@ -23,6 +27,8 @@ TouchScreen myTouch(XP, YP, XM, YM, 300);
 TSPoint tp;
 
 int32_t Cal_Left_X, Cal_Right_X, Cal_Top_Y, Cal_Bot_Y;
+
+bool Temp_Celsius = true;
 
 struct SeekBar {
   uint16_t x;
@@ -41,6 +47,9 @@ void setup(void) {
   Serial.begin(9600);
   tft.begin(tft.readID());
   tft.setRotation(3);
+
+  pinMode(20, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(20), ExportImageInterrupt, FALLING );
 
   tft.invertDisplay(true);
   tft.fillScreen(BLACK);

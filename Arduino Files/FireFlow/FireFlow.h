@@ -50,6 +50,14 @@
 //Clock Round Functions
 #define DEGREES_TO_RADIANS 0.0174533
 
+//Thermocouple
+#define THERMOCOUPLE_DO 22
+#define THERMOCOUPLE_CS 23
+#define THERMOCOUPLE_CLK 24
 
+#define THERMOCOUPLE_FAULT(x)                 (x == FAULT_OPEN || x == FAULT_SHORT_GND || x == FAULT_SHORT_VCC)
+#define THERMOCOUPLE_NUM_READINGS           5   // Number of readings to average the temperature over (5 readings = 1 second)
+#define THERMOCOUPLE_ERROR_THRESHOLD        15
 
-
+#define SS_W 480
+#define SS_H 320
