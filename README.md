@@ -12,18 +12,18 @@ Make sure you check out our [Wiki](https://github.com/FireDeveloper/FireFlow/wik
 
 <h2><a name="features">Features</a></h2>
 
- - [Features 1]
- - [Features 2]
- - [Features 3]
- - [Features 4]
- - [Features 5]
- - [Features 6]
- - [Features 7]
- - [Features 8]
- - [Features 9]
- - [Features 10]
- - [Features 11]
- - [Features 12]
+ - Arduino Core ATMega2560
+ - Expansion compatible
+ - Nextion HMI TFT LCD Touch screen
+ - SCADA Software
+ - 2 Thermocouple Sockets
+ - Micro SD Card
+ - Real Time Clock
+ - Isolated USB connection
+ - Controller board temperature monitoring
+ - 4 Relay NC-C-NO dry contacts
+ - 4 PWM Outputs
+
  
 <h2><a name="credits">Credits</a></h2>
 A big thank you goes to ME bitches xD (kidding, README its not finished yet)
