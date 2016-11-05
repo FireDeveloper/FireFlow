@@ -26,6 +26,6 @@ Make sure you check out our [Wiki](https://github.com/FireDeveloper/FireFlow/wik
 
  
 <h2><a name="credits">Credits</a></h2>
-A big thank you goes to ME bitches xD (kidding, README its not finished yet)
+README its not finished yet
 <br/>
 Thanks to everyone who volunteered by contributing via Pull Requests!
