@@ -9,7 +9,6 @@ uint16_t Oven_Set_Point = 150;
 //===============================================
 
 void Oven_Page_Listener(void *ptr) {
-  digitalWrite(13, HIGH);
   uint16_t Temperature = ReadTemperature();
   Oven_Set_Thermometer_Value(Temperature);
   Oven_Set_Text_Value(Temperature);
