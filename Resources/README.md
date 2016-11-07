@@ -1,4 +1,6 @@
-## FireFlow - Used Recources Licences
+
+
+FireFlow - Used Recources Licences
 <div>Icons made by <a href="http://www.flaticon.com/authors/roundicons" title="Roundicons">Roundicons</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 <div>Icons made by <a href="http://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 <div>Icons made by <a href="http://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
@@ -9,14 +11,14 @@ Sine Wave by Marco Galtarossa from the Noun Project
 Partial Derivative by Jason D. Rowley from the Noun Project
 
 
-Android Material Icon Generator License
+## Android Material Icon Generator License
 ================================
 Icons generated with the Android Material Icon Generator come with the Creative Common
 Attribution 4.0 International License (CC-BY 4.0). You are free to change,
 combine and sell any of the icons as you please. Attribution would be great,
 but is not strictly required.
 
-Google Material Icons License
+## Google Material Icons License
 =============================
 (Copied from https://github.com/google/material-design-icons)
 We have made these icons available for you to incorporate them into your
