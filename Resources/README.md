@@ -8,7 +8,7 @@ FireFlow - Used Recources Licences
 <div>Icons made by <a href="http://www.flaticon.com/authors/daniel-bruce" title="Daniel Bruce">Daniel Bruce</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 <div>Sine Wave by Marco Galtarossa from the Noun Project</div>
 <div>Partial Derivative by Jason D. Rowley from the Noun Project</div>
-<div>Proportional by <a href="svgimages" title="https://www.svgimages.com/proportionality.html">svgimages</a></div>
+<div>Proportional by <a href="https://www.svgimages.com/proportionality.html" title="https://www.svgimages.com/proportionality.html">svgimages</a></div>
 
 ## Android Material Icon Generator License
 Icons generated with the Android Material Icon Generator come with the Creative Common
