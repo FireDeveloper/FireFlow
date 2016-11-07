@@ -24,3 +24,5 @@ re-share these icons and documentation in your products.  We'd love attribution
 in your app's *about* screen, but it's not required.  The only thing we ask is
 that you not re-sell the icons themselves.
 
+I am sorry if I forgot something. If you notice that something is missing please open an issue to add it.
+Thank you, Fire.
